@@ -17,7 +17,7 @@ import { Control, LocalForm, Errors } from 'react-redux-form';
         );
     }
 
-    function RenderComments({comments}) {
+    function RenderComments({comments, addComment, dishId}) {
         if(comments != null)
             return(
                 <div className="col-12 col-md-5 m-1">
@@ -40,7 +40,7 @@ import { Control, LocalForm, Errors } from 'react-redux-form';
                             })
                         }
                     </lu>
-                    <CommentForm />
+                    <CommentForm dishId={dishId} addComment={addComment} />
                 </div>
             );
         else {
@@ -66,7 +66,9 @@ import { Control, LocalForm, Errors } from 'react-redux-form';
                     </div>
                     <div className="row">
                         <RenderDish dish={props.dish} /> 
-                        <RenderComments comments={props.comments} />
+                        <RenderComments comments={props.comments}
+                            addComment={props.addComment}
+                            dishId={props.dish.id} />
                     </div>
                 </div>
             );
@@ -105,6 +107,7 @@ class CommentForm extends Component {
     handleSubmit(values) {
         console.log("Current State is" + JSON.stringify(values));
         alert("Current State is" + JSON.stringify(values));
+        this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
     }
 
     render() {
@@ -149,9 +152,9 @@ class CommentForm extends Component {
                             <Label htmlFor="feedback">Commnet</Label>
                             <Row className="form-group">
                                 <Col>
-                                    <Control.textarea model=".message" id="message" name="message" 
+                                    <Control.textarea model=".comment" id="comment" name="comment" 
                                         rows="6" className="form-control" validators={{ required }} />
-                                    <Errors className="text-danger" model=".message" show="touched" 
+                                    <Errors className="text-danger" model=".comment" show="touched" 
                                         messages={{ required: 'Required'}} />
                                 </Col>
                             </Row>
